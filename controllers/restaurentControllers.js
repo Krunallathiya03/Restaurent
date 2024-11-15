@@ -22,7 +22,7 @@ const createrestaurentController = async(req,res) =>{
          }
 
     // create new restaurent
-    const newRestaurent = await restaurentModel.create({
+    const newRestaurent = await restaurentModel({
         title,
         imageUrl, 
         foods,
@@ -38,7 +38,7 @@ const createrestaurentController = async(req,res) =>{
 
     await newRestaurent.save();
     res.status(201).send({
-        message: "New restaurent created successfully",
+        message: "New restaurent created successfully",newRestaurent
         
     });
     }
@@ -49,4 +49,59 @@ const createrestaurentController = async(req,res) =>{
     }
 }
 
-module.exports = {createrestaurentController}
+//get all restaurent
+const getAllRestaurentController = async(req,res)=>{
+    try{
+        const restaurent = await restaurentModel.find()
+        if(!restaurent)
+            return res.status(404).send({message:"restaurent not found"})
+
+        res.status(200).send({totalRestaurent:restaurent.length,restaurent})
+    }
+    catch(error){
+        console.log(error)
+        res.status(500).send({message:"Error in get all restaurent api...",error})
+    }
+}
+
+//get byid restaurent
+const getRestaurentbyIdController = async(req,res) =>{
+    try{
+        const restaurentId = req.params.id;
+        if(!restaurentId)
+            return res.status(404).send({message:"please provide restaurent id"})
+
+        //find restaurent
+        const restaurent = await restaurentModel.findById(restaurentId)
+        if(!restaurent)
+            return res.status(404).send({message:"restaurent not found"})
+
+        res.status(200).send(restaurent)
+    }
+    catch(error){
+        console.log(error)
+        res.status(500).send({message:"error in get all retaurent by id api....",error})
+    }
+}
+
+//delete restaurent
+const deleterestaurentController = async (req,res)=>{
+    try{
+        const id = req.params.id
+        if(!id)
+            return res.status(404).send({message:"restaurent not found"});
+
+        const deleteRestaurent = await restaurentModel.findByIdAndDelete(id)
+        res.status(200).send({message:"Restaurent deleted sucessfully...",deleteRestaurent})
+    }
+    catch(error){
+        console.log(error)
+        res.status(500).send({message:"Error in delete restaurent api....",error})
+    }
+}
+
+module.exports = {createrestaurentController,
+                  getRestaurentbyIdController,
+                  getAllRestaurentController,
+                  deleterestaurentController
+}
