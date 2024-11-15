@@ -12,14 +12,14 @@ const createFoodController =  async (req,res) =>{
        foodTag,
        code,
        isAvailable,
-       //restaurent,
+       restaurent,
        rating,
        ratingcount
     } = req.body
     
        //validation
-       if(!title || !description || !price)
-           return res.status(400).send({message:"Please provide all fields"})
+       if(!title || !description || !price ||!restaurent)
+        return res.status(400).send({message:"Please provide all fields"})
     
        const food = new foodModel({title,
            description,
@@ -28,7 +28,7 @@ const createFoodController =  async (req,res) =>{
            foodTag,
            code,
            isAvailable,
-           //restaurent,
+           restaurent,
            rating,
            ratingcount});
            
